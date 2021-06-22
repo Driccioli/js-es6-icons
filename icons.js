@@ -97,12 +97,11 @@ const icons = [
 	}
 ];
 
-// Milestone 1
-// Partendo dalla seguente struttura dati , mostriamo in pagina tutte le icone disponibili come da layout.
-
 const containerHTML = document.querySelector(".icons-content");
+// Array delle checkbox 
 const checks = document.getElementsByClassName("form-check-input");
 
+// Genera tutte le card dei tipi approvati dai check
 function generateCard(icon){
 	const {name,prefix,family, type} = icon;
     containerHTML.innerHTML += `
@@ -119,33 +118,32 @@ function generateCard(icon){
     </div>
     `;
 };
-icons.forEach(icon =>{
+
+// Funzione che definisce gli elementi validi per il nuovo array 
+function iconFilter(icon){
+	if(icon.type==="animal" && checks[0].checked){
+		return true;
+	} else if(icon.type==="vegetable" && checks[1].checked){
+		return true;
+	}else if(icon.type==="user" && checks[2].checked){
+		return true;
+	}
+	return false;
+}
+// Genera array filtrato per la prima volta. Mantiene i check salvati dal browser 
+var filteredIcons= icons.filter(icon =>iconFilter(icon));
+filteredIcons.forEach(icon=> {
 	generateCard(icon);
 });
 
-
+// Crea un array filtrato ogni qualvolta un check viene cliccato
 Array.from(checks).forEach(check =>{
 	check.addEventListener("click", ()=>{
 		containerHTML.innerHTML="";
-		const filteredIcons = icons.filter(icon =>{
-			if(icon.type==="animal" && checks[0].checked){
-				return true;
-			} else if(icon.type==="vegetable" && checks[1].checked){
-				return true;
-			}else if(icon.type==="user" && checks[2].checked){
-				return true;
-			}
-			return false;
-			
-		});
+		filteredIcons = icons.filter(icon =>iconFilter(icon));
 	
 		filteredIcons.forEach(icon=> {
 			generateCard(icon);
 		});
 	});
 });
-
-
-// Milestone 3
-// Creiamo una select con i tipi di icone e usiamola per filtrare le icone
-
